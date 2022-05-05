@@ -1,0 +1,22 @@
+{
+    "type": "mysql",
+    "username": "root",
+    "password": "P0sta2020",
+    "host": "localhost",
+    "port": 3306,
+    "database": "digiturno",
+    "entities": [
+        "src/**/**/*.entity{.ts,.js}"
+    ],
+    "migrations": [
+        "src/database/migrations/mysql/*{.ts,.js}"
+    ],
+    "cli": {
+        "migrationsDir": "src/database/migrations/mysql"
+    },
+    "paths": {
+        "@/modules/*": ["src/modules/*"],
+        "@/config/*": ["src/config/*"],
+        "@/shared/*": ["src/shared/*"]
+    }
+}

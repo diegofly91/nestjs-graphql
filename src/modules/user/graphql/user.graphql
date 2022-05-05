@@ -1,0 +1,28 @@
+type User {
+    id: Int!
+    password: String
+    username: String
+    status: String
+    createdAt: String
+    updatedAt: String
+}
+
+input CreateUserDto {
+    email: String!
+    roleId: Int
+    username: String
+    password: String
+    status: String
+}
+
+
+type Query {
+    getUser(id: Int!): User!
+    getUserData: User!
+    getUsers: [User!]!
+}
+
+type Mutation {
+    createUser(input: CreateUserDto!): User!
+    deleteUser(id: Int!): User!
+}
