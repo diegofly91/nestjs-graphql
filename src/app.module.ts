@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService, Configuration, GraphQL } from './config';
 import { DatabaseModule } from './database';
 import { UserModule } from './modules/user';
+import { RoleModule } from './modules/role';
 
 @Module({
-    imports: [ConfigModule, GraphQL, UserModule, DatabaseModule],
+    imports: [ConfigModule, GraphQL, UserModule, RoleModule, DatabaseModule],
     providers: [],
 })
 export class AppModule {

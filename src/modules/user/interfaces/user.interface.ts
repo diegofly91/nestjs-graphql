@@ -3,16 +3,12 @@ export class IUser {
 
     readonly username: string;
 
-    readonly email: string;
-
     /**
      * User status ACTIVE | INACTIVE | default PREACTIVE
      */
     readonly status?: string;
 
-    /**
-     * readonly roleId: number;
-     */
+    readonly roleId: number;
 
     readonly password: string;
 

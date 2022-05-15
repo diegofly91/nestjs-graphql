@@ -3,13 +3,15 @@ import {
     BeforeInsert,
     BeforeUpdate,
     Column,
+    ManyToOne,
+    JoinColumn,
     CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Status } from '../../../shared/enums';
-//import { Role } from '../../role/entities';
+import { Role } from '../../role/entities';
 
 @Entity({ name: 'users' })
 export class User {
@@ -28,6 +30,13 @@ export class User {
         if (!this.password) return;
         this.password = await bcrypt.hash(this.password, 10);
     }
+
+    @Column({ type: 'int', name: 'role_id', nullable: false })
+    roleId: number;
+
+    @ManyToOne(() => Role, (role) => role.users)
+    @JoinColumn({ name: 'role_id' })
+    role: Role;
 
     @Column({ type: 'varchar', default: Status.PREACTIVE, nullable: true, length: 9 })
     status: string;

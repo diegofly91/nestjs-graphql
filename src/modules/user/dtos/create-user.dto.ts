@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 
 @ObjectType()
 export class CreateUserDto {
@@ -9,6 +9,10 @@ export class CreateUserDto {
     @IsString()
     @IsOptional()
     readonly username: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    roleId: number;
 
     @Field()
     @MinLength(8, { message: 'La contraseña es muy corta' })

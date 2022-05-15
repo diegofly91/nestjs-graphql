@@ -69,3 +69,6 @@ $ npm run migration:run
 
 # revert migration of the files create
 $ npm run migration:revert 
+
+# create data from the seeders
+$ npm run seed

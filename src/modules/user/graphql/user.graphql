@@ -3,6 +3,7 @@ type User {
     password: String
     username: String
     status: String
+    roleId: Int
     createdAt: String
     updatedAt: String
 }
