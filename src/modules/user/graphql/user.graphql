@@ -6,6 +6,7 @@ type User {
     roleId: Int
     createdAt: String
     updatedAt: String
+    role: Role!
 }
 
 input CreateUserDto {

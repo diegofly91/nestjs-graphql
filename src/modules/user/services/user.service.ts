@@ -15,9 +15,17 @@ export class UserService {
         return await this.userRepository.getUserById(userId);
     }
 
-    async getUserByCompanyId(companyId: number): Promise<User> {
-        return await this.userRepository.getUserByCompanyId(companyId);
+    async getUserByUsename(username: string): Promise<User> {
+        return await this.userRepository.getUserByUsename(username);
     }
+
+    async getPasswordByUsename(username: string): Promise<string> {
+        return await this.userRepository.getPasswordByUsename(username);
+    }
+
+    /*  async getUserByCompanyId(companyId: string): Promise<User> {
+        return await this.userRepository.getUserByCompanyId(companyId);
+    } */
 
     async createUser(dto: CreateUserDto): Promise<User> {
         return this.userRepository.createUser(dto);

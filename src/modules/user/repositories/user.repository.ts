@@ -16,11 +16,22 @@ export class UserRepository extends Repository<User> {
         return user;
     }
 
-    async findOneByUsername(username: string): Promise<User> {
+    async getUserByUsename(username: string): Promise<User> {
         if (!username) throw new BadRequestException('username must be provided');
-        const user = await this.createQueryBuilder('user').where('user.username = :username', { username }).getOne();
+        const user: User = await this.createQueryBuilder('user')
+            .where('user.username = :username', { username })
+            .getOne();
         if (!user) throw new NotFoundException('User is not exists');
         return user;
+    }
+
+    async getPasswordByUsename(username: string): Promise<string> {
+        const pass = await this.createQueryBuilder()
+            .select('password')
+            .where('username = :username', { username })
+            .getRawOne();
+
+        return pass.password;
     }
 
     async getUserByCompanyId(companyId: number): Promise<User> {

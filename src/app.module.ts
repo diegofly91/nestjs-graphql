@@ -3,9 +3,10 @@ import { ConfigModule, ConfigService, Configuration, GraphQL } from './config';
 import { DatabaseModule } from './database';
 import { UserModule } from './modules/user';
 import { RoleModule } from './modules/role';
+import { AuthModule } from './modules/auth';
 
 @Module({
-    imports: [ConfigModule, GraphQL, UserModule, RoleModule, DatabaseModule],
+    imports: [ConfigModule, GraphQL, UserModule, RoleModule, DatabaseModule, AuthModule],
     providers: [],
 })
 export class AppModule {

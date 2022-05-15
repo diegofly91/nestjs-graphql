@@ -10,7 +10,7 @@ export class IUser {
 
     readonly roleId: number;
 
-    readonly password: string;
+    password: string;
 
     readonly createdAt?: Date;
 
