@@ -8,15 +8,11 @@ export class UserService {
     constructor(private userRepository: UserRepository) {}
 
     async getUsers(): Promise<User[]> {
-        const users = await this.userRepository.findAll();
-
-        return users.map((user: User) => {
-            return user;
-        });
+        return await this.userRepository.getUsers();
     }
 
     async getUserById(userId: number): Promise<User> {
-        return await this.userRepository.findOneById(userId);
+        return await this.userRepository.getUserById(userId);
     }
 
     async getUserByCompanyId(companyId: number): Promise<User> {

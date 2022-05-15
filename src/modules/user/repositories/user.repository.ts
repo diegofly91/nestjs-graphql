@@ -2,15 +2,15 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos';
 import { User } from '../entities';
+import { Status } from '@/shared/enums';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-
-    async findAll(): Promise<User[]> {
+    async getUsers(): Promise<User[]> {
         return await this.find();
     }
 
-    async findOneById(id: number): Promise<User> {
+    async getUserById(id: number): Promise<User> {
         const user = await this.findOne(id);
         if (!user) throw new NotFoundException('User is not exists');
         return user;
@@ -57,21 +57,15 @@ export class UserRepository extends Repository<User> {
     }*/
 
     async createUser(dto: CreateUserDto): Promise<User> {
-        //const user = await this.userExist(dto);
-        // if (!dto.username) {
-        //     dto.username = await this.createUsername(dto.email);
-        // }
-        //if (user) throw new BadRequestException('User is already registered');
-        const newUser: User = await this.create(dto);
-        await this.save(newUser);
-        delete (await newUser[0]).password;
-        return newUser[0];
+        const newUser: User = this.create(dto);
+        return await this.save(newUser);
     }
 
     async deleteUser(userId: number): Promise<User> {
-        const user = await this.findOneById(userId);
-        const userDeleted = await this.remove(user);
-        delete (await userDeleted).password;
+        const user = await this.findOne(userId);
+        user.status = Status.DELETED;
+        const userDeleted = await this.save(user);
+        delete userDeleted.password;
         return userDeleted;
     }
 

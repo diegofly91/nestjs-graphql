@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService, Configuration, GraphQL } from './config';
 import { DatabaseModule } from './database';
 import { UserModule } from './modules/user';
 
-
 @Module({
     imports: [ConfigModule, GraphQL, UserModule, DatabaseModule],
     providers: [],
