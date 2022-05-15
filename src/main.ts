@@ -38,5 +38,5 @@ if (fs.existsSync(crPath) && fs.existsSync(pkPath)) {
     );
     app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
     await app.listen(port, host);
-    logger.log(`Server is running in ${await app.getUrl()}`);
+    logger.log(`Server is running in ${await app.getUrl()}/graphql`);
 })();

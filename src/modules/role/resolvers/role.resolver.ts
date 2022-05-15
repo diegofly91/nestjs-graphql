@@ -22,8 +22,8 @@ export class RoleResolver {
 
     // @Roles(RoleType.SUPERUSER)
     @Query(() => Role, { nullable: false })
-    async getRole(@Args('id') id: number): Promise<Role> {
-        return this.roleService.getRole(id);
+    async getRoleById(@Args('id') id: number): Promise<Role> {
+        return this.roleService.getRoleById(id);
     }
 
     // @Roles(RoleType.SUPERUSER)

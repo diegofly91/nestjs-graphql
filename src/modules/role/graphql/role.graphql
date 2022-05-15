@@ -22,7 +22,7 @@ input UpdateRoleInput {
 }
 
 type Query {
-    getRole(id: Int!): Role!
+    getRoleById(id: Int!): Role!
     getRoles: [Role!]!
 }
 

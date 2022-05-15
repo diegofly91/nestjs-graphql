@@ -8,14 +8,14 @@ export class RoleService {
     constructor(private readonly roleRepository: RoleRepository) {}
 
     async getRoles(): Promise<Role[]> {
-        return await this.roleRepository.findAll();
+        return await this.roleRepository.getRoles();
     }
 
-    async getRole(roleId: number): Promise<Role> {
-        return await this.roleRepository.findOneById(roleId);
+    async getRoleById(roleId: number): Promise<Role> {
+        return await this.roleRepository.getRoleById(roleId);
     }
 
-    async getRoleByName(dto: FindByNameRoleDto): Promise<Role> {
+    async findOneByName(dto: FindByNameRoleDto): Promise<Role> {
         return await this.roleRepository.findOneByName(dto);
     }
 
