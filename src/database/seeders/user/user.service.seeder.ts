@@ -19,7 +19,6 @@ export class UserSeederService {
             if (!userN) {
                 const newUser = this.userRepository.create(user);
                 const userSaved = await this.userRepository.save(newUser);
-                delete (await userSaved).password;
                 return userSaved;
             } else return userN;
         });

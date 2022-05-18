@@ -1,0 +1,34 @@
+type Profile {
+    id: Int!
+    userId: Int!
+    firstname: String
+    lastname: String
+    email: String
+    phone: String
+    createdAt: String!
+    updatedAt: String!
+}
+
+input CreateProfileUserDto {
+    firstname: String
+    lastname: String
+    email: String
+    phone: String
+}
+
+input UpdateProfileUserDto {
+    firstname: String
+    lastname: String
+    email: String
+    phone: String
+}
+
+type Query {
+   getProfileUserById(userId: Int!): Profile
+   getProfileByEmail(email: String!): Profile 
+}
+
+type Mutation {
+  createProfileUser(input: CreateProfileUserDto): Profile!
+  updateProfileUser(input: UpdateProfileUserDto!): Profile!
+}

@@ -1,3 +1,5 @@
+import { IProfile } from "./profile.interface";
+
 export class IUser {
     readonly id: number;
 
@@ -15,4 +17,6 @@ export class IUser {
     readonly createdAt?: Date;
 
     readonly updatedAt?: Date;
+
+    profile?: IProfile;
 }

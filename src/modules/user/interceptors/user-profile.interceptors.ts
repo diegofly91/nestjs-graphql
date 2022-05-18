@@ -1,0 +1,30 @@
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, mixin } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { User } from '../entities';
+import { ProfileService } from '../services';
+import { CreateProfileUserDto } from '../dtos';
+
+export function UserProfileInterceptor() {
+    @Injectable()
+    class ProfileInterceptor implements NestInterceptor {
+        constructor(private readonly profileService: ProfileService) {}
+
+        async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+            const ctx = GqlExecutionContext.create(context);
+            const input: CreateProfileUserDto = ctx.getArgs().inputPro;
+
+            return next.handle().pipe(
+                tap(async (res: User) => {
+                    if (input && res) {
+                        const { id } = await res;
+                        await this.profileService.createProfileUser(id, input);
+                    }
+                }),
+            );
+        }
+    }
+    const Interceptor = mixin(ProfileInterceptor);
+    return Interceptor;
+}

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RoleSeederService } from './role/role.service.seeder';
-import { UserSeederService } from './user/user.service.seeder';
+import { UserSeederService, ProfileSeederService } from './user/';
 
 @Injectable()
 export class SeederService {
@@ -8,6 +8,7 @@ export class SeederService {
         private readonly logger: Logger,
         private readonly roleSeederService: RoleSeederService,
         private readonly userSeederService: UserSeederService,
+        private readonly profileSeederService: ProfileSeederService,
     ) {}
 
     async seed() {
@@ -28,6 +29,16 @@ export class SeederService {
             })
             .catch((error) => {
                 this.logger.error('Failed seeding users...');
+                Promise.reject(error);
+            });
+
+        await this.profiles()
+            .then((completed) => {
+                this.logger.debug('Successfuly completed seeding profiles...');
+                Promise.resolve(completed);
+            })
+            .catch((error) => {
+                this.logger.error('Failed seeding profiles...');
                 Promise.reject(error);
             });
     }
@@ -52,6 +63,20 @@ export class SeederService {
                 this.logger.debug(
                     'No. of Users created : ' +
                         createdUsers.filter((nullValueOrCreatedLanguage) => nullValueOrCreatedLanguage).length,
+                );
+
+                return Promise.resolve(true);
+            })
+            .catch((error) => Promise.reject(error));
+    }
+
+    async profiles() {
+        return await Promise.all(this.profileSeederService.createProfiles())
+            .then((createdProfiles) => {
+                // Can also use this.logger.verbose('...');
+                this.logger.debug(
+                    'No. of Profile created : ' +
+                    createdProfiles.filter((nullValueOrCreatedLanguage) => nullValueOrCreatedLanguage).length,
                 );
 
                 return Promise.resolve(true);
