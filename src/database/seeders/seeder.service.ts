@@ -76,7 +76,7 @@ export class SeederService {
                 // Can also use this.logger.verbose('...');
                 this.logger.debug(
                     'No. of Profile created : ' +
-                    createdProfiles.filter((nullValueOrCreatedLanguage) => nullValueOrCreatedLanguage).length,
+                        createdProfiles.filter((nullValueOrCreatedLanguage) => nullValueOrCreatedLanguage).length,
                 );
 
                 return Promise.resolve(true);

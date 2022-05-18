@@ -1,4 +1,3 @@
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfileService } from '../services';
 import { ProfileRepository } from '../repositories';
@@ -39,12 +38,12 @@ describe('ProfileService', () => {
                 firstname: 'diego',
                 lastname: 'libreros',
                 email: 'postareservas@gmail.com',
-                phone: null
+                phone: null,
             };
 
-            const result = await profileService.createProfileUser(1,createprofileDto);
+            const result = await profileService.createProfileUser(1, createprofileDto);
 
-            expect(profileRepository.createProfileUser).toHaveBeenCalledWith(1,createprofileDto);
+            expect(profileRepository.createProfileUser).toHaveBeenCalledWith(1, createprofileDto);
             expect(result).toEqual('someProfile');
         });
     });
@@ -58,12 +57,12 @@ describe('ProfileService', () => {
                 firstname: 'diego',
                 lastname: 'libreros',
                 email: 'postareservas@gmail.com',
-                phone: null
+                phone: null,
             };
 
-            const result = await profileService.updateProfileUser(1,createprofileDto);
+            const result = await profileService.updateProfileUser(1, createprofileDto);
 
-            expect(profileRepository.updateProfileUser).toHaveBeenCalledWith(1,createprofileDto);
+            expect(profileRepository.updateProfileUser).toHaveBeenCalledWith(1, createprofileDto);
             expect(result).toEqual('someProfile');
         });
     });
@@ -91,5 +90,4 @@ describe('ProfileService', () => {
             expect(result).toEqual('someProducts');
         });
     });
-
 });
