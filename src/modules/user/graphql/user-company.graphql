@@ -1,0 +1,14 @@
+type UserCompany {
+    id:Int!
+    userId: Int!
+    companyId: Int!
+    company: Company!
+}
+
+type Query {
+    getUserCompanyByUserId(userId: Int!): UserCompany
+}
+
+type Mutation {
+    createUserCompany(userId: Int!, companyId: Int!): Boolean!
+}

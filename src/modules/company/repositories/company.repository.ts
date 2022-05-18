@@ -15,6 +15,13 @@ export class CompanyRepository extends Repository<Company> {
         return company;
     }
 
+    async getCompanyByUserId(userId: number): Promise<Company> {
+        return await this.createQueryBuilder('company')
+            .innerJoinAndSelect('users_companies', 'userCompany', 'userCompany.company_id = company.id ')
+            .where('userCompany.user_id = :userId', { userId })
+            .getOne();
+    }
+
     async createCompany(dto: CreateCompanyDto): Promise<Company> {
         const company = await this.create(dto);
         return await this.save(company);

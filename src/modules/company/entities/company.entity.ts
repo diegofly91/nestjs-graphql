@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { UserCompany } from '../../user/entities/';
 
 @Entity({ name: 'companies' })
 export class Company {
@@ -46,4 +47,7 @@ export class Company {
 
     @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: true })
     updatedAt: Date;
+
+    @OneToMany(() => UserCompany, (userCompany) => userCompany.company, { cascade: true })
+    userCompanys: UserCompany[];
 }

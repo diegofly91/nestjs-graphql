@@ -3,11 +3,11 @@ import { Expose, Exclude } from 'class-transformer';
 import {
     IsNotEmpty,
     IsOptional,
-  //  IsPhoneNumber,
+    //  IsPhoneNumber,
     IsString,
     IsBoolean,
     MaxLength,
-  //  ValidationArguments,
+    //  ValidationArguments,
     MinLength,
 } from 'class-validator';
 
@@ -27,7 +27,7 @@ export class CreateCompanyDto {
     @IsNotEmpty()
     address: string;
 
-/* @IsString({ message: 'Debe ser un numero valido' })
+    /* @IsString({ message: 'Debe ser un numero valido' })
     @IsPhoneNumber('CO', {
         message: (args: ValidationArguments) => {
             if (args.value.length !== 12) {

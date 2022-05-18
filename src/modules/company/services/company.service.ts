@@ -15,6 +15,10 @@ export class CompanyService {
         return await this.companyRepository.getCompanyById(companyId);
     }
 
+    async getCompanyByUserId(userId: number): Promise<Company> {
+        return await this.companyRepository.getCompanyByUserId(userId);
+    }
+
     async createCompany(dto: CreateCompanyDto): Promise<Company> {
         return await this.companyRepository.createCompany(dto);
     }

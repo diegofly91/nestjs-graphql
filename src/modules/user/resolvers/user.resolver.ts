@@ -2,9 +2,11 @@ import { UsePipes, ValidationPipe, UseGuards, UseInterceptors } from '@nestjs/co
 import { Args, Mutation, Query, Resolver, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { CreateUserDto } from '../dtos';
 import { User, Profile } from '../entities';
+import { Company } from '@/modules/company/entities';
 import { Role } from '@/modules/role/entities';
 import { RoleService } from '@/modules/role/services';
 import { UserService, ProfileService } from '../services';
+import { CompanyService } from '@/modules/company/services';
 import { RolesGuard } from '@/modules/auth/guards';
 import { RoleType } from '@/modules/role/enums';
 import { Roles } from '@/modules/role/decorators';
@@ -18,6 +20,7 @@ export class UserResolver {
         private readonly userService: UserService,
         private readonly roleService: RoleService,
         private readonly profileService: ProfileService,
+        private readonly companyService: CompanyService,
     ) {}
 
     @Roles(RoleType.SUPERUSER, RoleType.ADMIN)
@@ -65,5 +68,11 @@ export class UserResolver {
     async profile(@Parent() user) {
         const { id } = user;
         return await this.profileService.getProfileUserById(id);
+    }
+
+    @ResolveField('company', () => Company)
+    async company(@Parent() user) {
+        const { id } = user;
+        return await this.companyService.getCompanyByUserId(id);
     }
 }

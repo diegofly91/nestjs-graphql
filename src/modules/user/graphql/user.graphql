@@ -8,6 +8,7 @@ type User {
     updatedAt: String
     role: Role!
     profile: Profile
+    company: Company
 }
 
 input CreateUserDto {
