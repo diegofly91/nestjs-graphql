@@ -1,15 +1,4 @@
-//import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { Expose, Exclude } from 'class-transformer';
-import {
-    IsNotEmpty,
-    IsOptional,
-    //  IsPhoneNumber,
-    IsString,
-    IsBoolean,
-    MaxLength,
-    //  ValidationArguments,
-    MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsBoolean, MaxLength, MinLength } from 'class-validator';
 
 export class CreateCompanyDto {
     @MinLength(5, { message: 'El nombre es muy corto' })
@@ -26,18 +15,6 @@ export class CreateCompanyDto {
     @IsString()
     @IsNotEmpty()
     address: string;
-
-    /* @IsString({ message: 'Debe ser un numero valido' })
-    @IsPhoneNumber('CO', {
-        message: (args: ValidationArguments) => {
-            if (args.value.length !== 12) {
-                throw new BadRequestException(`${args.value} Invalid MobilePhone Number`);
-            } else {
-                throw new InternalServerErrorException();
-            }
-        },
-    })
-    phone: string;*/
 
     @MaxLength(240, { message: 'La descripcion es muy larga' })
     @IsOptional()

@@ -3,9 +3,9 @@ import { IsInt, IsOptional } from 'class-validator';
 export class PaginationArgs {
     @IsOptional()
     @IsInt()
-    offset: number = 0;
+    offset = 0;
 
     @IsOptional()
     @IsInt()
-    limit: number = 10;
+    limit = 10;
 }

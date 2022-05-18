@@ -11,7 +11,7 @@ export class Image implements CustomScalar<ImageProps, ImageProps> {
 
     async parseValue(value: any) {
         const { file } = await value;
-        const { filename, mimetype } = file;
+        const { mimetype } = file;
         if (!this.supportedFormats.includes(mimetype))
             throw new BadRequestException(`Unsupported file format. Supports: ${this.supportedFormats.join(' ')}.`);
         return file;

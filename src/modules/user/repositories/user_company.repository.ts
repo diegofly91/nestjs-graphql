@@ -9,10 +9,10 @@ export class UserCompanyRepository extends Repository<UserCompany> {
 
     async createUserCompany(userId: number, companyId: number): Promise<boolean> {
         const userCompany = await this.createQueryBuilder()
-        .insert()
-        .into(UserCompany)
-        .values({ userId, companyId })
-        .execute();
+            .insert()
+            .into(UserCompany)
+            .values({ userId, companyId })
+            .execute();
         return !!userCompany;
     }
 }

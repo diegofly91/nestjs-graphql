@@ -10,13 +10,13 @@ export class SearchDto {
     @Min(0)
     @Max(1)
     @IsOptional()
-    isActive: number = 1;
+    isActive = 1;
 
     @IsInt()
     @Min(0)
     @Max(1)
     @IsOptional()
-    deleted: number = 0;
+    deleted = 0;
 
     @IsOptional()
     status: string = Status.ACTIVE;

@@ -1,6 +1,6 @@
 import { UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Context } from '@nestjs/graphql';
-import { UserCompany, User } from '../entities';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UserCompany } from '../entities';
 import { UserCompanyService } from '../services';
 import { AuthGuard, RolesGuard } from '@/modules/auth/guards';
 import { RoleType } from '@/modules/role/enums';

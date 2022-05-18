@@ -33,7 +33,7 @@ describe('UserCompanyService', () => {
 
             const result = await userCompanyService.createUserCompany(1, 2);
 
-            expect(userCompanyRepository.createUserCompany).toHaveBeenCalledWith(1,2);
+            expect(userCompanyRepository.createUserCompany).toHaveBeenCalledWith(1, 2);
             expect(result).toEqual('someUserCompany');
         });
     });
