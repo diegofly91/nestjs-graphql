@@ -4,9 +4,10 @@ import { DatabaseModule } from './database';
 import { UserModule } from './modules/user';
 import { RoleModule } from './modules/role';
 import { AuthModule } from './modules/auth';
+import { CompanyModule } from './modules/company';
 
 @Module({
-    imports: [ConfigModule, GraphQL, UserModule, RoleModule, DatabaseModule, AuthModule],
+    imports: [ConfigModule, GraphQL, UserModule, RoleModule, CompanyModule, DatabaseModule, AuthModule],
     providers: [],
 })
 export class AppModule {

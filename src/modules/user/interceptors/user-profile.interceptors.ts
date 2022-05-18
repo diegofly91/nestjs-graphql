@@ -18,7 +18,7 @@ export function UserProfileInterceptor() {
             return next.handle().pipe(
                 tap(async (res: User) => {
                     if (input && res) {
-                        const { id } = await res;
+                        const { id } = res;
                         await this.profileService.createProfileUser(id, input);
                     }
                 }),

@@ -1,0 +1,31 @@
+
+type Company {
+    id: Int!
+    name: String!
+    description: String
+    address: String
+    logo: String
+    isActive: Boolean
+    deleted: Boolean!
+    createdAt: String!
+    updatedAt: String!
+}
+
+input CompanyDto {
+    name: String!
+    description: String
+    address: String
+    logo: String
+    isActive: Boolean
+}
+
+type Query {
+    getCompanyById(id: Int!): Company!
+    getCompaniesAll: [Company!]!
+}
+
+type Mutation {
+    createCompany(input: CompanyDto!, file: Image): Company!
+    updateCompany(id: Int!, input: CompanyDto!, file: Image): Company!
+    deleteCompany(id: Int!): Company!
+}

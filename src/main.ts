@@ -34,6 +34,7 @@ if (fs.existsSync(crPath) && fs.existsSync(pkPath)) {
                 return new BadRequestException(errorMessages.toString());
             },
             forbidUnknownValues: false,
+            transform: true,
         }),
     );
     app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));

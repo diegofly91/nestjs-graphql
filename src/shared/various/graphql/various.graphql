@@ -1,0 +1,22 @@
+""" Input de paginacion  """
+input Pagination {
+  limit: Int
+  offset: Int
+}
+
+""" Input Search By Name more Options """
+input Search {
+   name : String
+   isActive: Int
+   delete: Int
+   status : String
+}
+
+
+""" Input by Id """
+input JokerById {
+   id: Int!
+}
+
+
+scalar Image
