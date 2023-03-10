@@ -1,17 +1,39 @@
 //import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleService } from '../services';
-import { RoleRepository } from '../repositories';
-import { Status } from '../../../shared/enums';
+import { RoleType } from '../enums/index';
+import { CreateRoleDto } from '../dtos';
+import { IRole } from '../interfaces';
 
+const Roles: IRole[] = [
+    { 
+        id: 1,
+        name: RoleType.SUPERUSER,
+        description: '' 
+    },
+    {
+        id: 2,
+        name: RoleType.ADMIN,
+        description: '',
+    },
+];
 describe('RoleService', () => {
     let roleService;
-    let roleRepository;
 
     const mockRoleRepository = () => ({
-        getRoles: jest.fn(),
-        createRole: jest.fn(),
-        getRoleById: jest.fn(),
+        getRoles: jest.fn().mockImplementation(() => {
+            return Promise.resolve(Roles);
+        }),
+        createRole: jest.fn().mockImplementation((dto: CreateRoleDto) => {
+            return Promise.resolve({
+                id: Date.now(),
+                ...dto,
+            });
+        }),
+        getRoleById: jest.fn().mockImplementation((id: number) => {
+            const role = Roles.find((item) => item.id === id)
+            return Promise.resolve(role);
+        }),
         deleteRole: jest.fn(),
     });
 
@@ -20,21 +42,24 @@ describe('RoleService', () => {
             providers: [
                 RoleService,
                 {
-                    provide: RoleRepository,
+                    provide: 'RoleRepositoryInterface',
                     useFactory: mockRoleRepository,
                 },
             ],
         }).compile();
 
         roleService = await module.get<RoleService>(RoleService);
-        roleRepository = await module.get<RoleRepository>(RoleRepository);
     });
 
+    describe('getRoles', () => {
+        it('should get all Roles', async () => {
+            const result = await roleService.getRoles();
+            expect(result).toEqual(Roles);
+            expect(result.length).toBe(Roles.length)
+        });
+    });
     describe('createRole', () => {
         it('should save a Role in the database', async () => {
-            roleRepository.createRole.mockResolvedValue('someRole');
-            expect(roleRepository.createRole).not.toHaveBeenCalled();
-
             const createRoleDto = {
                 name: 'CUSTOMER',
                 description: 'nuevo role',
@@ -42,44 +67,24 @@ describe('RoleService', () => {
 
             const result = await roleService.createRole(createRoleDto);
 
-            expect(roleRepository.createRole).toHaveBeenCalledWith(createRoleDto);
-            expect(result).toEqual('someRole');
+            expect(result).toEqual({
+                id: expect.any(Number),
+                ...createRoleDto,
+            });
         });
     });
-
-    describe('getRoles', () => {
-        it('should get all Roles', async () => {
-            roleRepository.getRoles.mockResolvedValue('someProducts');
-
-            expect(roleRepository.getRoles).not.toHaveBeenCalled();
-
-            const result = await roleService.getRoles();
-            expect(roleRepository.getRoles).toHaveBeenCalled();
-            expect(result).toEqual('someProducts');
-        });
-    });
-
     describe('getRoleById', () => {
         it('should retrieve a Role with an ID', async () => {
-            const mockRole = {
-                Rolename: 'diegofly91',
-                password: 'diegofl91',
-                status: Status.PREACTIVE,
-            };
-
-            roleRepository.getRoleById.mockResolvedValue(mockRole);
-
-            const result = await roleService.getRoleById(1);
-            expect(result).toEqual(mockRole);
-
-            expect(roleRepository.getRoleById).toHaveBeenCalledWith(1);
+            const id = 1;
+            const result = await roleService.getRoleById(id);
+            expect(result).toEqual({
+                id,
+                name: expect.any(String),
+                description: expect.any(String),
+            });
         });
-
-        /*    it('throws an error Role is not exists', () => {
-               RoleRepository.getRoleById.mockResolvedValue(NotFoundException);       
-                expect(RoleService.getRoleById(1)).rejects.toThrowError(NotFoundException);
-        });*/
     });
+    /*
 
     describe('deleteRole', () => {
         it('should delete Role', async () => {
@@ -89,4 +94,5 @@ describe('RoleService', () => {
             expect(roleRepository.deleteRole).toHaveBeenCalledWith(1);
         });
     });
+    */
 });

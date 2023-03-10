@@ -10,11 +10,11 @@ import { CompanyModule } from './modules/company';
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
+        DatabaseModule,
         GraphQL,
         UserModule,
         RoleModule,
         CompanyModule,
-        DatabaseModule,
         AuthModule,
     ],
     providers: [],

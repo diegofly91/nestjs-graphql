@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CompanyRepository } from '../repositories';
 import { Company } from '../entities';
 import { CreateCompanyDto, UpdateCompanyDto } from '../dtos';
 
 @Injectable()
 export class CompanyService {
-    constructor(private companyRepository: CompanyRepository) {}
+    constructor(
+        @Inject('CompanyRepositoryInterface')
+        private readonly companyRepository: CompanyRepository<Company>,
+    ) {}
 
     async getCompaniesAll(): Promise<Company[]> {
         return await this.companyRepository.getCompaniesAll();

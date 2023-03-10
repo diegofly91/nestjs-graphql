@@ -18,8 +18,8 @@ export class ProfileService {
         return await this.profileUserRepository.getProfileByEmail(email);
     }
 
-    async createProfileUser(id: number, dto: CreateProfileUserDto): Promise<Profile> {
-        return this.profileUserRepository.createProfileUser(id, dto);
+    async createProfileUser(userId: number, dto: CreateProfileUserDto): Promise<Profile> {
+        return this.profileUserRepository.createProfileUser(userId, dto);
     }
 
     async updateProfileUser(id: number, dto: UpdateProfileUserDto): Promise<Profile> {

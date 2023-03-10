@@ -9,13 +9,13 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { InternalServerErrorException } from '@nestjs/common';
 import { Status } from '../../shared/enums';
 import { Role } from '../../role/entities';
 import * as bcrypt from 'bcrypt';
+import { IUser } from '../interfaces';
 
 @Entity({ name: 'users' })
-export class User {
+export class User implements IUser {
     @PrimaryGeneratedColumn('increment')
     id: number;
 

@@ -1,8 +1,9 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities';
+import { IRole } from '../interfaces';
 
 @Entity({ name: 'roles' })
-export class Role {
+export class Role implements IRole {
     @PrimaryGeneratedColumn('increment')
     id: number;
 

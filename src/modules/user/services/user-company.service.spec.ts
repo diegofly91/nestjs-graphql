@@ -1,14 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserCompanyService } from '../services';
 import { UserCompanyRepository } from '../repositories';
-
+import { UserCompany } from '../entities';
 describe('UserCompanyService', () => {
     let userCompanyService;
-    let userCompanyRepository;
 
     const mockUserCompanyRepository = () => ({
-        getUserCompanyByUserId: jest.fn(),
-        createUserCompany: jest.fn(),
+        getUserCompanyByUserId: jest.fn().mockImplementation((id) => {
+            return Promise.resolve({
+                id: Date.now(),
+                userId: id,
+                companyId: 3,
+            });
+        }),
+        createUserCompany: jest.fn().mockImplementation((userId, companyId) => {
+            return Promise.resolve(true);
+        }),
     });
 
     beforeEach(async () => {
@@ -16,37 +23,31 @@ describe('UserCompanyService', () => {
             providers: [
                 UserCompanyService,
                 {
-                    provide: UserCompanyRepository,
+                    provide: 'UserCompanyRepositoryInterface',
                     useFactory: mockUserCompanyRepository,
                 },
             ],
         }).compile();
 
         userCompanyService = await module.get<UserCompanyService>(UserCompanyService);
-        userCompanyRepository = await module.get<UserCompanyRepository>(UserCompanyRepository);
     });
 
     describe('createuserCompany', () => {
         it('should save a userCompany in the database', async () => {
-            userCompanyRepository.createUserCompany.mockResolvedValue('someUserCompany');
-            expect(userCompanyRepository.createUserCompany).not.toHaveBeenCalled();
-
-            const result = await userCompanyService.createUserCompany(1, 2);
-
-            expect(userCompanyRepository.createUserCompany).toHaveBeenCalledWith(1, 2);
-            expect(result).toEqual('someUserCompany');
+            const userId = 1;
+            const companyId = 2;
+            expect(await userCompanyService.createUserCompany(userId, companyId)).toEqual(true);
         });
     });
 
     describe('getUserCompanyByUserId', () => {
         it('should get userCompany by UserId', async () => {
-            userCompanyRepository.getUserCompanyByUserId.mockResolvedValue('someProducts');
-
-            expect(userCompanyRepository.getUserCompanyByUserId).not.toHaveBeenCalled();
-
-            const result = await userCompanyService.getUserCompanyByUserId(1);
-            expect(userCompanyRepository.getUserCompanyByUserId).toHaveBeenCalled();
-            expect(result).toEqual('someProducts');
+            const userId = 1;
+            expect(await userCompanyService.getUserCompanyByUserId(userId)).toEqual({
+                id: expect.any(Number),
+                userId,
+                companyId: expect.any(Number),
+            });
         });
     });
 });

@@ -1,5 +1,3 @@
-import { RoleType } from '../enums';
-
 export interface IRole {
     /**
      * ID autoincrement from database.
@@ -9,10 +7,14 @@ export interface IRole {
     /**
      * Name of Role
      */
-    readonly name?: RoleType;
+    readonly name?: string;
 
     /**
      * Description of Role
      */
     readonly description?: string;
+
+    readonly createdAt?: Date;
+
+    readonly updatedAt?: Date;
 }

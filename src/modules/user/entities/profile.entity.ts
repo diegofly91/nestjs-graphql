@@ -8,9 +8,10 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { IProfile } from '../interfaces';
 
 @Entity({ name: 'profiles' })
-export class Profile {
+export class Profile implements IProfile {
     @PrimaryGeneratedColumn('increment')
     id: number;
 

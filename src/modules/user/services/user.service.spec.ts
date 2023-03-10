@@ -1,92 +1,107 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../services';
-import { UserRepository } from '../repositories';
-import { Status } from '../../../shared/enums';
+import { Status } from '../../shared/enums';
 
 describe('UserService', () => {
     let userService;
-    let userRepository;
 
-    const mockUserRepository = () => ({
-        getUsers: jest.fn(),
-        createUser: jest.fn(),
-        getUserById: jest.fn(),
-        deleteUser: jest.fn(),
-    });
+    const mockUserRepository = {
+        createUser: jest.fn().mockImplementation((dto) => {
+            return {
+                id: Date.now(),
+                ...dto,
+            };
+        }),
+        getUsers: jest.fn().mockImplementation(() => {
+            return [];
+        }),
+        getUserById: jest.fn().mockImplementation((id) => {
+            const dto = {
+                username: 'diegofly91',
+                password: '',
+                status: Status.PREACTIVE,
+                roleId: 1,
+            };
+            return {
+                id,
+                ...dto,
+            };
+        }),
+        deleteUser: jest.fn().mockImplementation((id) => {
+            return {
+                id,
+                status: Status.DELETED,
+            };
+        }),
+    };
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 UserService,
                 {
-                    provide: UserRepository,
-                    useFactory: mockUserRepository,
+                    provide: 'UserRepositoryInterface',
+                    useValue: mockUserRepository,
                 },
             ],
         }).compile();
-
         userService = await module.get<UserService>(UserService);
-        userRepository = await module.get<UserRepository>(UserRepository);
     });
 
     describe('createuser', () => {
         it('should save a user in the database', async () => {
-            userRepository.createUser.mockResolvedValue('someUser');
-            expect(userRepository.createUser).not.toHaveBeenCalled();
-
-            const createuserDto = {
+            const dto = {
                 username: 'diegofly91',
                 password: 'diegofl91',
                 status: Status.PREACTIVE,
+                roleId: 1,
             };
+            expect(await userService.createUser(dto)).toEqual({
+                id: expect.any(Number),
+                ...dto,
+            });
 
-            const result = await userService.createUser(createuserDto);
+            expect(mockUserRepository.createUser).toHaveBeenCalledWith(dto);
 
-            expect(userRepository.createUser).toHaveBeenCalledWith(createuserDto);
-            expect(result).toEqual('someUser');
+            expect(await userService.createUser(dto)).toEqual({
+                id: expect.any(Number),
+                ...dto,
+            });
+
+            expect(mockUserRepository.createUser).toHaveBeenCalledWith(dto);
         });
     });
 
     describe('getUsers', () => {
         it('should get all users', async () => {
-            userRepository.getUsers.mockResolvedValue('someProducts');
+            expect(await userService.getUsers()).toEqual([]);
 
-            expect(userRepository.getUsers).not.toHaveBeenCalled();
-
-            const result = await userService.getUsers();
-            expect(userRepository.getUsers).toHaveBeenCalled();
-            expect(result).toEqual('someProducts');
+            expect(mockUserRepository.getUsers).toHaveBeenCalled();
         });
     });
 
     describe('getUserById', () => {
         it('should retrieve a user with an ID', async () => {
-            const mockUser = {
-                username: 'diegofly91',
-                password: 'diegofl91',
-                status: Status.PREACTIVE,
-            };
+            expect(await userService.getUserById(1)).toEqual({
+                id: 1,
+                username: expect.any(String),
+                status: expect.any(String),
+                password: expect.any(String),
+                roleId: expect.any(Number),
+            });
 
-            userRepository.getUserById.mockResolvedValue(mockUser);
-
-            const result = await userService.getUserById(1);
-            expect(result).toEqual(mockUser);
-
-            expect(userRepository.getUserById).toHaveBeenCalledWith(1);
+            expect(mockUserRepository.getUserById).toHaveBeenCalled();
         });
-
-        /*    it('throws an error User is not exists', () => {
-               userRepository.getUserById.mockResolvedValue(NotFoundException);       
-                expect(userService.getUserById(1)).rejects.toThrowError(NotFoundException);
-        });*/
     });
 
     describe('deleteUser', () => {
         it('should delete user', async () => {
-            userRepository.deleteUser.mockResolvedValue(1);
-            expect(userRepository.deleteUser).not.toHaveBeenCalled();
-            await userService.deleteUser(1);
-            expect(userRepository.deleteUser).toHaveBeenCalledWith(1);
+            expect(await userService.deleteUser(1)).toEqual({
+                id: expect.any(Number),
+                status: expect.any(String),
+            });
+
+            expect(mockUserRepository.deleteUser).toHaveBeenCalled();
         });
     });
 });

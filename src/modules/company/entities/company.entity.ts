@@ -1,8 +1,9 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { UserCompany } from '../../user/entities/';
+import { ICompany } from '../interfaces';
 
 @Entity({ name: 'companies' })
-export class Company {
+export class Company implements ICompany {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
