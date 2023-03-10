@@ -12,11 +12,8 @@ export class RoleSeederService {
         private readonly roleRepository: Repository<Role>,
     ) {}
 
-    createRoles(): Array<Promise<Role>> {
-        return rolesSeed.map(async (role: IRole) => {
-            const roleN = await this.roleRepository.findOne({ name: role.name });
-            if (!roleN) return await this.roleRepository.save(role);
-            else return roleN;
-        });
+    async createRoles(): Promise<Role[]> {
+        const { raw } = await this.roleRepository.createQueryBuilder().insert().into(Role).values(rolesSeed).execute();
+        return raw;
     }
 }

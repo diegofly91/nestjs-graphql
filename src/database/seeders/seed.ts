@@ -12,7 +12,7 @@ import { SeederService } from './seeder.service';
     seeder
         .seed()
         .then((msg) => {
-            console.log(msg);
+            console.log({ msg });
             logger.log('Seeding complete!');
         })
         .finally(() => app.close())

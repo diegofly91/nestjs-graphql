@@ -14,8 +14,10 @@ export class UserSeederService {
 
     createUsers(): Array<Promise<User>> {
         return usersSeed.map(async (user: IUser) => {
-            const userN = await this.userRepository.findOne({ id: user.id });
-
+            const userN = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.id = :id', { id: user.id })
+                .getOne();
             if (!userN) {
                 const newUser = this.userRepository.create(user);
                 const userSaved = await this.userRepository.save(newUser);

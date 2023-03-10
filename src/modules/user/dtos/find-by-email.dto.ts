@@ -1,6 +1,7 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
+@InputType('FindByEmailDto')
 @ObjectType()
 export class FindByEmailDto {
     @Field()

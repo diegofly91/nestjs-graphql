@@ -1,33 +1,38 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository, ProfileRepository, UserCompanyRepository } from './repositories';
 import { UserResolver, ProfileResolver, UserCompanyResolver } from './resolvers';
 import { UserService, ProfileService, UserCompanyService } from './services';
-import { CompanyRepository } from '../company/repositories';
-import { CompanyService } from '../company/services';
 import { AuthModule } from '../auth';
-import { RoleRepository } from '../role/repositories';
-import { RoleService } from '../role/services';
+import { Profile, User, UserCompany } from './entities';
+import { CompanyModule } from '../company';
+import { RoleModule } from '../role';
 
 @Module({
     imports: [
-        AuthModule,
-        TypeOrmModule.forFeature([
-            UserRepository,
-            ProfileRepository,
-            RoleRepository,
-            UserCompanyRepository,
-            CompanyRepository,
-        ]),
+        forwardRef(() => AuthModule),
+        forwardRef(() => CompanyModule),
+        forwardRef(() => RoleModule),
+        TypeOrmModule.forFeature([User, Profile, UserCompany]),
     ],
     providers: [
+        {
+            provide: 'UserRepositoryInterface',
+            useClass: UserRepository,
+        },
+        {
+            provide: 'UserCompanyRepositoryInterface',
+            useClass: UserCompanyRepository,
+        },
+        {
+            provide: 'ProfileRepositoryInterface',
+            useClass: ProfileRepository,
+        },
         UserService,
         UserCompanyService,
         ProfileService,
-        CompanyService,
         UserCompanyResolver,
         UserResolver,
-        RoleService,
         ProfileResolver,
     ],
     exports: [UserService],

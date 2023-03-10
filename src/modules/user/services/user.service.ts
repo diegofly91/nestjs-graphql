@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { User } from '../entities';
 import { UserRepository } from '../repositories';
 import { CreateUserDto } from '../dtos';
 
 @Injectable()
 export class UserService {
-    constructor(private userRepository: UserRepository) {}
+    constructor(
+        @Inject('UserRepositoryInterface')
+        private readonly userRepository: UserRepository<User>,
+    ) {}
 
     async getUsers(): Promise<User[]> {
         return await this.userRepository.getUsers();
@@ -15,8 +18,8 @@ export class UserService {
         return await this.userRepository.getUserById(userId);
     }
 
-    async getUserByUsename(username: string): Promise<User> {
-        return await this.userRepository.getUserByUsename(username);
+    async getUserByUsername(username: string): Promise<User> {
+        return await this.userRepository.getUserByUsername(username);
     }
 
     async getPasswordByUsename(username: string): Promise<string> {

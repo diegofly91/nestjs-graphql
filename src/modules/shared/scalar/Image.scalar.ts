@@ -1,6 +1,8 @@
 import { Scalar, CustomScalar } from '@nestjs/graphql';
 import { BadRequestException } from '@nestjs/common';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { FileUpload } from '../interfaces/index';
+//import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import { default as GraphQLUpload } from 'graphql-upload/GraphQLUpload.mjs';
 
 export type ImageProps = Promise<FileUpload>;
 

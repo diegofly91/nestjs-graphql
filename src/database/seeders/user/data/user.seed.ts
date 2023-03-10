@@ -1,5 +1,5 @@
 import { IUser, IProfile } from '@/modules/user/interfaces';
-import { Status } from '@/shared/enums';
+import { Status } from '@/modules/shared/enums';
 
 export const usersSeed: IUser[] = [
     {

@@ -44,9 +44,8 @@ export class SeederService {
     }
 
     async roles() {
-        return await Promise.all(this.roleSeederService.createRoles())
+        return await Promise.resolve(this.roleSeederService.createRoles())
             .then((createdRoles) => {
-                // Can also use this.logger.verbose('...');
                 this.logger.debug(
                     'No. of Roles created : ' +
                         createdRoles.filter((nullValueOrCreatedLanguage) => nullValueOrCreatedLanguage).length,
@@ -71,7 +70,7 @@ export class SeederService {
     }
 
     async profiles() {
-        return await Promise.all(this.profileSeederService.createProfiles())
+        return await Promise.resolve(this.profileSeederService.createProfiles())
             .then((createdProfiles) => {
                 // Can also use this.logger.verbose('...');
                 this.logger.debug(

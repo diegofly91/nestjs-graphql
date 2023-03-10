@@ -12,14 +12,13 @@ export class ProfileSeederService {
         private readonly profileRepository: Repository<Profile>,
     ) {}
 
-    createProfiles(): Array<Promise<Profile>> {
-        return profilesSeed.map(async (profile: IProfile) => {
-            const profileN = await this.profileRepository.findOne({ userId: profile.userId });
-            if (!profileN) {
-                const newProfile = this.profileRepository.create(profile);
-                const userSaved = await this.profileRepository.save(newProfile);
-                return userSaved;
-            } else return profileN;
-        });
+    async createProfiles(): Promise<Profile[]> {
+        const { raw } = await this.profileRepository
+            .createQueryBuilder()
+            .insert()
+            .into(Profile)
+            .values(profilesSeed)
+            .execute();
+        return raw;
     }
 }

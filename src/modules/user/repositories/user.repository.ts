@@ -1,24 +1,30 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
+import { BadRequestException, NotFoundException, Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos';
 import { User } from '../entities';
-import { Status } from '@/shared/enums';
+import { Status } from '@/modules/shared/enums';
+import { UserInterfaceRepository } from '../interfaces';
 
-@EntityRepository(User)
-export class UserRepository extends Repository<User> {
+@Injectable()
+export class UserRepository<User> implements UserInterfaceRepository<User> {
+    constructor(
+        @InjectRepository(User)
+        private readonly usersRepository: Repository<User>,
+    ) {}
+
     async getUsers(): Promise<User[]> {
-        return await this.find();
+        return await this.usersRepository.find();
     }
 
     async getUserById(id: number): Promise<User> {
-        const user = await this.findOne(id);
-        if (!user) throw new NotFoundException('User is not exists');
-        return user;
+        return await this.usersRepository.createQueryBuilder('user').where('user.id = :id', { id }).getOne();
     }
 
-    async getUserByUsename(username: string): Promise<User> {
+    async getUserByUsername(username: string): Promise<User> {
         if (!username) throw new BadRequestException('username must be provided');
-        const user: User = await this.createQueryBuilder('user')
+        const user: User = await this.usersRepository
+            .createQueryBuilder('user')
             .where('user.username = :username', { username })
             .getOne();
         if (!user) throw new NotFoundException('User is not exists');
@@ -26,57 +32,36 @@ export class UserRepository extends Repository<User> {
     }
 
     async getPasswordByUsename(username: string): Promise<string> {
-        const pass = await this.createQueryBuilder()
+        const pass = await this.usersRepository
+            .createQueryBuilder()
             .select('password')
             .where('username = :username', { username })
             .getRawOne();
-
         return pass.password;
     }
 
     async getUserByCompanyId(companyId: number): Promise<User> {
-        return await this.createQueryBuilder('user')
+        return await this.usersRepository
+            .createQueryBuilder('user')
             .innerJoinAndSelect('companies', 'companies', 'companies.user_id = user.id AND companies.id = :companyId', {
                 companyId,
             })
             .getOne();
     }
 
-    /*
-    async findOneByEmailFace(email: string): Promise<User> {
-        const user = await this.createQueryBuilder('user').where('user.email = :email', { email }).getOne();
-
-        return user;
-    }
-
-    async findByEmail(dto: QueryUserEmailDto): Promise<boolean> {
-        const existUser = await this.findOne({ email: dto.email });
-        return !!existUser;
-    }
-
-    async findOneByEmail(email: string): Promise<User> {
-        if (!email) throw new BadRequestException('An email must be provided');
-
-        const user = await this.createQueryBuilder('user')
-            .where('user.email = :email', { email })
-            .addSelect('user.password')
-            .getOne();
-
-        if (!user) throw new NotFoundException('User is not exists');
-
-        return user;
-    }*/
-
     async createUser(dto: CreateUserDto): Promise<User> {
-        const newUser: User = this.create(dto);
-        return await this.save(newUser);
+        const { username } = dto;
+        const exitsUsername = await this.getUserByUsername(username);
+        if (exitsUsername) {
+            throw new HttpException('the Exits USERNAME', HttpStatus.PRECONDITION_FAILED);
+        }
+        const { raw } = await this.usersRepository.createQueryBuilder().insert().into(User).values(dto).execute();
+        return raw;
     }
 
     async deleteUser(userId: number): Promise<User> {
-        const user = await this.findOne(userId);
-        user.status = Status.DELETED;
-        const userDeleted = await this.save(user);
-        delete userDeleted.password;
+        const user: User = await this.getUserById(userId);
+        const userDeleted = await this.usersRepository.save(user);
         return userDeleted;
     }
 
@@ -96,16 +81,6 @@ export class UserRepository extends Repository<User> {
     }
 
     async newPasswordRequest(): Promise<string> {
-        return await Math.random().toString(36).substr(2, 8);
+        return Math.random().toString(36).substr(2, 8);
     }
-
-    /*
-    async userExist(dto: FindByEmailDto): Promise<boolean> {
-        const user = await this.createQueryBuilder('user')
-            .select('user.email')
-            .where('user.email = :email', { email: dto.email })
-            .getOne();
-
-        return !!user;
-    }*/
 }

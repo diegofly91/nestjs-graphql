@@ -1,6 +1,7 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, InputType, Field, Int } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 
+@InputType('CreateUserDto')
 @ObjectType()
 export class CreateUserDto {
     @Field()
@@ -10,6 +11,7 @@ export class CreateUserDto {
     @IsOptional()
     readonly username: string;
 
+    @Field(() => Int)
     @IsNumber()
     @IsNotEmpty()
     roleId: number;

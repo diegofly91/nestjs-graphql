@@ -38,7 +38,7 @@ describe('ProfileService', () => {
                 firstname: 'diego',
                 lastname: 'libreros',
                 email: 'postareservas@gmail.com',
-                phone: null,
+                phone: '',
             };
 
             const result = await profileService.createProfileUser(1, createprofileDto);
@@ -57,7 +57,7 @@ describe('ProfileService', () => {
                 firstname: 'diego',
                 lastname: 'libreros',
                 email: 'postareservas@gmail.com',
-                phone: null,
+                phone: '',
             };
 
             const result = await profileService.updateProfileUser(1, createprofileDto);

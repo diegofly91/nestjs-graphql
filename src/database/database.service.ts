@@ -1,23 +1,27 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConnectionOptions } from 'typeorm';
-import { ConfigModule, ConfigService, Configuration } from '../config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 
 export const databaseProviders = [
     TypeOrmModule.forRootAsync({
         imports: [ConfigModule],
         inject: [ConfigService],
-        async useFactory(config: ConfigService) {
-            return {
-                type: config.get(Configuration.DATABASE_TYPE),
-                host: config.get(Configuration.DATABASE_HOST),
-                port: parseInt(config.get(Configuration.DATABASE_PORT), 10),
-                database: config.get(Configuration.DATABASE_NAME),
-                username: config.get(Configuration.DATABASE_USER),
-                password: config.get(Configuration.DATABASE_PASS),
-                timezone: config.get(Configuration.DATABASE_TIMEZONE),
-                entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-                migrations: [__dirname + config.get(Configuration.DATABASE_MIGRATIONS_DIR) + '/*.{.ts,.js}'],
-            } as ConnectionOptions;
+        useFactory: async (config: ConfigService) => ({
+            type: 'postgres',
+            host: config.get('DATABASE_HOST'),
+            port: +config.get('DATABASE_PORT'),
+            database: config.get('DATABASE_NAME'),
+            username: config.get('DATABASE_USER'),
+            password: config.get('DATABASE_PASS'),
+            timezone: config.get('DATABASE_TIMEZONE'),
+            autoLoadEntities: !!config.get('DATABASE_AUTOLOADENTITIES'),
+            synchronize: !!config.get('DATABASE_AUTOLOADENTITIES'),
+            entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+            migrations: [__dirname + config.get('DATABASE_MIGRATIONS_DIR') + '/*.{.ts,.js}'],
+        }),
+        dataSourceFactory: async (options) => {
+            const dataSource = await new DataSource(options).initialize();
+            return dataSource;
         },
     }),
 ];

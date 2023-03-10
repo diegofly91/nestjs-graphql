@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import { IUser } from '@/modules/user/interfaces';
 import { UserService } from '@/modules/user/services';
 import { RoleService } from '@/modules/role/services';
@@ -16,14 +16,14 @@ export class AuthService {
 
     async validateUser(dto: LoginUserDto): Promise<Token> {
         const { username, password } = dto;
-        const user = await this.userService.getUserByUsename(username);
+        const user = await this.userService.getUserByUsername(username);
         await this.comparePassword(password, username);
         return await this.payloadData(user);
     }
 
     async comparePassword(password, username) {
         const userPassword = await this.userService.getPasswordByUsename(username);
-        const passwordHashed = await compare(password, userPassword);
+        const passwordHashed = await bcrypt.compare(password, userPassword);
         if (!passwordHashed) {
             throw new NotFoundException('La contraseña no coincide');
         }

@@ -1,10 +1,10 @@
 {
-    "type": "mysql",
-    "username": "root",
-    "password": "P0sta2020",
+    "type": "postgres",
+    "username": "admin",
+    "password": "my-weak-password",
     "host": "localhost",
-    "port": 3306,
-    "database": "digiturno",
+    "port": 5432,
+    "database": "postgres",
     "entities": [
         "src/**/**/*.entity{.ts,.js}"
     ],
@@ -16,7 +16,6 @@
     },
     "paths": {
         "@/modules/*": ["src/modules/*"],
-        "@/config/*": ["src/config/*"],
-        "@/shared/*": ["src/shared/*"]
+        "@/config/*": ["src/config/*"]
     }
 }

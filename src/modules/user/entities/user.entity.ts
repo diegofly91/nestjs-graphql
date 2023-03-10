@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcryptjs';
 import {
     BeforeInsert,
     BeforeUpdate,
@@ -10,8 +9,10 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Status } from '../../../shared/enums';
+import { InternalServerErrorException } from '@nestjs/common';
+import { Status } from '../../shared/enums';
 import { Role } from '../../role/entities';
+import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'users' })
 export class User {
@@ -21,15 +22,15 @@ export class User {
     @Column({ type: 'varchar', nullable: true, length: 25, unique: true })
     username: string;
 
-    @Column({ type: 'varchar', length: 60, select: false })
-    password: string;
-
     @BeforeInsert()
     @BeforeUpdate()
     async hashPassword() {
-        if (!this.password) return;
-        this.password = await bcrypt.hash(this.password, 10);
+        if (!!this.password) {
+            this.password = await bcrypt.hash(this.password, 10);
+        }
     }
+    @Column({ type: 'varchar', length: 100, select: false })
+    password: string;
 
     @Column({ type: 'int', name: 'role_id', nullable: false })
     roleId: number;
@@ -38,7 +39,7 @@ export class User {
     @JoinColumn({ name: 'role_id' })
     role: Role;
 
-    @Column({ type: 'varchar', default: Status.PREACTIVE, nullable: true, length: 9 })
+    @Column({ type: 'varchar', default: Status.ACTIVE, nullable: true, length: 9 })
     status: string;
 
     @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: true })

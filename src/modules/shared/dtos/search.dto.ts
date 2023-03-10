@@ -1,5 +1,5 @@
 import { IsString, Min, Max, IsInt, IsOptional } from 'class-validator';
-import { Status } from '@/shared/enums';
+import { Status } from '../enums';
 
 export class SearchDto {
     @IsOptional()

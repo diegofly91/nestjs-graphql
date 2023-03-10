@@ -1,19 +1,28 @@
-import { BadRequestException } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProfileUserDto, UpdateProfileUserDto } from '../dtos';
 import { Profile } from '../entities';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProfileInterfaceRepository } from '../interfaces';
 
-@EntityRepository(Profile)
-export class ProfileRepository extends Repository<Profile> {
+@Injectable()
+export class ProfileRepository<Profile> implements ProfileInterfaceRepository<Profile> {
+    constructor(
+        @InjectRepository(Profile)
+        private readonly profileRepository: Repository<Profile>,
+    ) {}
+
     async getProfileUserById(userId: number): Promise<Profile> {
-        return await this.createQueryBuilder('profiles')
+        return await this.profileRepository
+            .createQueryBuilder('profiles')
             .select()
             .where('profiles.userId = :userId', { userId })
             .getOne();
     }
 
     async getProfileByEmail(email: string): Promise<Profile> {
-        const existsProfile = await this.createQueryBuilder('profiles')
+        const existsProfile = await this.profileRepository
+            .createQueryBuilder('profiles')
             .select()
             .where('profiles.email = :email', { email })
             .getOne();
@@ -27,18 +36,24 @@ export class ProfileRepository extends Repository<Profile> {
             throw new BadRequestException(`The user already registered.`);
         }
         const createProfile = Object.assign(userId, dto);
-        const newProfile = await this.create(createProfile);
-        return await this.save(newProfile);
+        const { raw } = await this.profileRepository
+            .createQueryBuilder()
+            .insert()
+            .into(Profile)
+            .values(createProfile)
+            .execute();
+        return raw;
     }
 
     async updateProfileUser(userId: number, dto: UpdateProfileUserDto): Promise<Profile> {
-        const profile = await this.createQueryBuilder('profiles')
+        const profile = await this.profileRepository
+            .createQueryBuilder('profiles')
             .select()
             .where('profiles.userId = :userId', { userId })
             .getOne();
         if (!profile) throw new BadRequestException(`The user already  not profile.`);
         const profileToUpdate = Object.assign(profile, dto);
-        const profileUpdated = await this.save(profileToUpdate);
+        const profileUpdated = await this.profileRepository.save(profileToUpdate);
         return profileUpdated;
     }
 }

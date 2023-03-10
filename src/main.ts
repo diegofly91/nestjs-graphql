@@ -1,14 +1,14 @@
 import { BadRequestException, Logger, ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService, Configuration } from './config';
+import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs-extra';
-import { graphqlUploadExpress } from 'graphql-upload';
+import { graphqlUploadExpress } from 'graphql-upload-ts';
 
 const configService = new ConfigService();
 // definimos la ruta
-const crPath = configService.get(Configuration.SSL_CERTIFICATE);
-const pkPath = configService.get(Configuration.SSL_CERTIFICATE_KEY);
+const crPath = configService.get('SSL_CERTIFICATE');
+const pkPath = configService.get('SSL_CERTIFICATE_KEY');
 const options: any = {};
 
 // validamos si los archivos existen

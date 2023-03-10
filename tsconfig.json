@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+      "moduleResolution":"node16",
       "module": "CommonJS",
       "declaration": false,
       "removeComments": true,
@@ -12,11 +13,11 @@
       "baseUrl": "./",
       "incremental": true,
       "allowJs": true,
+      "strict": false,
       "skipLibCheck": true,
       "paths": {
           "@/modules/*": ["src/modules/*"],
-          "@/config/*": ["src/config/*"],
-          "@/shared/*": ["src/shared/*"]
+          "@/config/*": ["src/config/*"]
       }
   },
   "include": ["src/**/*"],

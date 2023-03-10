@@ -1,16 +1,15 @@
 import { NotFoundException } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateCompanyDto, UpdateCompanyDto } from '../dtos';
 import { Company } from '../entities';
 
-@EntityRepository(Company)
 export class CompanyRepository extends Repository<Company> {
     async getCompaniesAll(): Promise<Company[]> {
-        return await this.find();
+        return await this.createQueryBuilder('company').getMany();
     }
 
     async getCompanyById(id: number): Promise<Company> {
-        const company = await this.findOne(id);
+        const company = await this.createQueryBuilder('company').where('company.id = :id', { id }).getOne();
         if (!company) throw new NotFoundException('No existe la empresa');
         return company;
     }
