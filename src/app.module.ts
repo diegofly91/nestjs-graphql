@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { GraphQL } from './config';
+import { GraphQL } from './graphql';
 import { DatabaseModule } from './database';
 import { UserModule } from './modules/user';
 import { RoleModule } from './modules/role';
