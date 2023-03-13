@@ -16,7 +16,7 @@ export class TypeOrmService implements TypeOrmOptionsFactory {
             migrationsRun: !!process.env.DATABASE_AUTOLOADENTITIES,
             synchronize: !!process.env.DATABASE_AUTOLOADENTITIES,
             entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-            migrations: [__dirname + process.env.DATABASE_MIGRATIONS_DIR + '/' + process.env.DB_TYPE + '/*.{.ts,.js}'],
+            migrations: [__dirname + process.env.DATABASE_MIGRATIONS_DIR + '/*.{.ts,.js}'],
         };
 
         if (process.env.DB_TYPE === 'mysql') {
