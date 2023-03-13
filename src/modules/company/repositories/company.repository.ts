@@ -4,6 +4,7 @@ import { CreateCompanyDto, UpdateCompanyDto } from '../dtos';
 import { Company } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyInterfaceRepository } from '../interfaces/company.repository.interface';
+import { OptionDto, PaginationArgs } from '@/modules/shared/dtos';
 
 @Injectable()
 export class CompanyRepository<Company> implements CompanyInterfaceRepository<Company> {
@@ -14,6 +15,18 @@ export class CompanyRepository<Company> implements CompanyInterfaceRepository<Co
 
     async getCompaniesAll(): Promise<Company[]> {
         return await this.companyRepository.createQueryBuilder('company').getMany();
+    }
+
+    async getCompanies(input: OptionDto, pagination?: PaginationArgs): Promise<Company[]> {
+        const { offset, limit } = pagination;
+        const { isActive, deleted } = input;
+        return await this.companyRepository
+            .createQueryBuilder('companies')
+            .where('companies.is_active = :isActive AND deleted = :deleted ', { isActive, deleted })
+            .skip(offset)
+            .take(limit)
+            .orderBy('companies.id', 'ASC')
+            .getMany();
     }
 
     async getCompanyById(id: number): Promise<Company> {

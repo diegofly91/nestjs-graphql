@@ -2,7 +2,7 @@ type User {
     id: Int!
     password: String
     username: String
-    status: String
+    status: STATUS
     roleId: Int
     createdAt: String
     updatedAt: String
@@ -11,14 +11,13 @@ type User {
     company: Company
 }
 
-input CreateUserDto {
-    email: String!
-    roleId: Int
-    username: String
-    password: String
-    status: String
-}
 
+input CreateUserDto {
+    username: String!
+    roleId: Int!
+    password: String!
+    status: STATUS
+}
 
 type Query {
     getUser(id: Int!): User!

@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { CompanyRepository } from '../repositories';
 import { Company } from '../entities';
 import { CreateCompanyDto, UpdateCompanyDto } from '../dtos';
+import { OptionDto, PaginationArgs } from '@/modules/shared/dtos';
 
 @Injectable()
 export class CompanyService {
@@ -12,6 +13,10 @@ export class CompanyService {
 
     async getCompaniesAll(): Promise<Company[]> {
         return await this.companyRepository.getCompaniesAll();
+    }
+
+    async getCompanies(option: OptionDto, pagination: PaginationArgs): Promise<Company[]> {
+        return await this.companyRepository.getCompanies(option, pagination);
     }
 
     async getCompanyById(companyId: number): Promise<Company> {

@@ -2,8 +2,7 @@ import { Scalar, CustomScalar } from '@nestjs/graphql';
 import { BadRequestException } from '@nestjs/common';
 import { FileUpload } from '../interfaces/index';
 //import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { default as GraphQLUpload } from 'graphql-upload/GraphQLUpload.mjs';
-
+import { GraphQLUpload } from 'graphql-upload-ts';
 export type ImageProps = Promise<FileUpload>;
 
 @Scalar('Image')

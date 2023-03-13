@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { UserCompany } from '../../user/entities/';
 import { ICompany } from '../interfaces';
+import { Deleted, IsActive } from '../../shared/enums';
 
 @Entity({ name: 'companies' })
 export class Company implements ICompany {
@@ -25,8 +26,8 @@ export class Company implements ICompany {
         name: 'is_active',
         default: 1,
         transformer: {
-            to: (value: number) => (value == 1 ? true : false),
-            from: (value: boolean) => (value ? 1 : 0),
+            to: (value: number) => (value === IsActive.TRUE ? true : false),
+            from: (value: boolean) => (value ? IsActive.TRUE : IsActive.FALSE),
         },
     })
     isActive: boolean;
@@ -37,8 +38,8 @@ export class Company implements ICompany {
         nullable: true,
         default: 0,
         transformer: {
-            from: (value: number) => (value == 1 ? true : false),
-            to: (value: boolean) => (value ? 1 : 0),
+            from: (value: number) => (value == Deleted.TRUE ? true : false),
+            to: (value: boolean) => (value ? Deleted.TRUE : Deleted.FALSE),
         },
     })
     deleted: boolean;

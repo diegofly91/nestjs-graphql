@@ -1,4 +1,5 @@
-import { ObjectType, InputType, Field, Int } from '@nestjs/graphql';
+import { Status } from '@/modules/shared/enums';
+import { ObjectType, InputType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 
 @InputType('CreateUserDto')
@@ -23,8 +24,8 @@ export class CreateUserDto {
     @IsNotEmpty()
     readonly password: string;
 
-    @Field()
+    @Field(() => registerEnumType)
     @IsString()
     @IsOptional()
-    readonly status?: string;
+    status: keyof typeof Status = Status.ACTIVE;
 }

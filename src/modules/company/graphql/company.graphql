@@ -1,4 +1,3 @@
-
 type Company {
     id: Int!
     name: String!
@@ -22,6 +21,7 @@ input CompanyDto {
 type Query {
     getCompanyById(id: Int!): Company!
     getCompaniesAll: [Company!]!
+    getCompanies(options: Options, pagination: Pagination) : [Company!]!
 }
 
 type Mutation {

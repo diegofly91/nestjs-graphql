@@ -6,6 +6,7 @@ import { CompanyService } from '../services';
 import { AuthGuard, RolesGuard } from '../../auth/guards/';
 import { RoleType } from '@/modules/role/enums';
 import { Roles } from '@/modules/role/decorators';
+import { OptionDto, PaginationArgs } from '@/modules/shared/dtos';
 
 @UseGuards(RolesGuard)
 @Resolver(() => Company)
@@ -16,6 +17,16 @@ export class CompanyResolver {
     @Query(() => [Company])
     public async getCompaniesAll(): Promise<Company[]> {
         return this.companyService.getCompaniesAll();
+    }
+
+    @Roles(RoleType.SUPERUSER)
+    @UsePipes(new ValidationPipe())
+    @Query(() => [Company])
+    public async getCompanies(
+        @Args('options') options: OptionDto,
+        @Args('pagination') pagination: PaginationArgs,
+    ): Promise<Company[]> {
+        return this.companyService.getCompanies(options, pagination);
     }
 
     @Query(() => Company, { nullable: true })

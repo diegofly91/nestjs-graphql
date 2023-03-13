@@ -7,6 +7,7 @@ import { RoleModule } from './modules/role';
 import { AuthModule } from './modules/auth';
 import { CompanyModule } from './modules/company';
 import { SeederModule } from './modules/seeder';
+import { DateScalar, Image } from './modules/shared/scalar';
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { SeederModule } from './modules/seeder';
         AuthModule,
         SeederModule,
     ],
-    providers: [],
+    providers: [DateScalar],
 })
 export class AppModule {
     static host: string;
