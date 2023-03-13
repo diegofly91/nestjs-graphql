@@ -1,6 +1,16 @@
+type UserPayload {
+    id: Int!
+    username: String!
+    status: String!
+    roleId: Int!
+    roleName: String
+    companyId: Int
+}
+
 type Token {
     access_token: String!
 }
+
 
 input LoginUserDto {
     username: String!
@@ -13,7 +23,7 @@ input UpdatePasswordDto {
 }
 
 type Query {
-    userCurrent: User
+    userCurrent: UserPayload
 }
 
 type Mutation {

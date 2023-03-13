@@ -13,7 +13,7 @@ import { RoleModule } from '../role';
         forwardRef(() => AuthModule),
         forwardRef(() => CompanyModule),
         forwardRef(() => RoleModule),
-        TypeOrmModule.forFeature([User, Profile, UserCompany]),
+        TypeOrmModule.forFeature([User, UserCompany, Profile]),
     ],
     providers: [
         {
@@ -35,6 +35,6 @@ import { RoleModule } from '../role';
         UserResolver,
         ProfileResolver,
     ],
-    exports: [UserService],
+    exports: [UserService, ProfileService, UserCompanyService],
 })
 export class UserModule {}

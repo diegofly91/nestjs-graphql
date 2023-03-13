@@ -35,12 +35,18 @@ export class ProfileRepository<Profile> implements ProfileInterfaceRepository<Pr
         if (!!existsProfile) {
             throw new BadRequestException(`The user already registered.`);
         }
-        const createProfile = Object.assign(userId, dto);
+        //const createProfile = Object.assign({}, userId, dto);
+        const newProfile = new Profile();
+        newProfile.email = dto.email;
+        newProfile.firstname = dto.firstname;
+        newProfile.lastname = dto.lastname;
+        newProfile.phone = dto.phone;
+        newProfile.userId = userId;
         const { raw } = await this.profileRepository
             .createQueryBuilder()
             .insert()
             .into(Profile)
-            .values(createProfile)
+            .values(newProfile)
             .execute();
         return raw;
     }

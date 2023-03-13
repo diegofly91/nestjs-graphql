@@ -1,21 +1,23 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { GraphQL } from './config';
-import { DatabaseModule } from './database';
+import { DatabaseModule } from './modules/database';
 import { UserModule } from './modules/user';
 import { RoleModule } from './modules/role';
 import { AuthModule } from './modules/auth';
 import { CompanyModule } from './modules/company';
+import { SeederModule } from './modules/seeder';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         DatabaseModule,
         GraphQL,
-        UserModule,
         RoleModule,
+        UserModule,
         CompanyModule,
         AuthModule,
+        SeederModule,
     ],
     providers: [],
 })

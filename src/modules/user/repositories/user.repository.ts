@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos';
 import { User } from '../entities';
-import { Status } from '@/modules/shared/enums';
-import { UserInterfaceRepository } from '../interfaces';
+import { IUser, UserInterfaceRepository } from '../interfaces';
 
 @Injectable()
 export class UserRepository<User> implements UserInterfaceRepository<User> {
@@ -27,17 +26,16 @@ export class UserRepository<User> implements UserInterfaceRepository<User> {
             .createQueryBuilder('user')
             .where('user.username = :username', { username })
             .getOne();
-        if (!user) throw new NotFoundException('User is not exists');
         return user;
     }
 
-    async getPasswordByUsename(username: string): Promise<string> {
-        const pass = await this.usersRepository
-            .createQueryBuilder()
-            .select('password')
-            .where('username = :username', { username })
-            .getRawOne();
-        return pass.password;
+    async getPasswordByUsename(username: string): Promise<User> {
+        return await this.usersRepository
+            .createQueryBuilder('user')
+            .select()
+            .addSelect('user.password')
+            .where('user.username = :username', { username })
+            .getOne();
     }
 
     async getUserByCompanyId(companyId: number): Promise<User> {
@@ -50,34 +48,25 @@ export class UserRepository<User> implements UserInterfaceRepository<User> {
     }
 
     async createUser(dto: CreateUserDto): Promise<User> {
-        const { username } = dto;
-        const exitsUsername = await this.getUserByUsername(username);
+        const exitsUsername = await this.getUserByUsername(dto.username);
         if (exitsUsername) {
-            throw new HttpException('the Exits USERNAME', HttpStatus.PRECONDITION_FAILED);
+            throw new HttpException('The Exits USERNAME', HttpStatus.PRECONDITION_FAILED);
         }
-        const { raw } = await this.usersRepository.createQueryBuilder().insert().into(User).values(dto).execute();
-        return raw;
+        const user = new User();
+        user.password = dto.password;
+        user.roleId = dto.roleId;
+        user.status = dto.status;
+        user.username = dto.username;
+        //return await this.usersRepository.save(this.usersRepository.create(user));
+
+        const { raw } = await this.usersRepository.createQueryBuilder().insert().into(User).values(user).execute();
+        return raw[0];
     }
 
     async deleteUser(userId: number): Promise<User> {
         const user: User = await this.getUserById(userId);
         const userDeleted = await this.usersRepository.save(user);
         return userDeleted;
-    }
-
-    async createUsername(email: string): Promise<string> {
-        //const r = Math.random().toString(36).substring(4);
-        const usermail = email.split('@');
-        let username = usermail[0];
-        username =
-            username.length < 4
-                ? username +
-                  Math.random()
-                      .toString(36)
-                      .substring(8 - username.length)
-                : username + Math.random().toString(36).substring(4);
-        username = username.length > 24 ? username.substr(20) : username;
-        return username;
     }
 
     async newPasswordRequest(): Promise<string> {

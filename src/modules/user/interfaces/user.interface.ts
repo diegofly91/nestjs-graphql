@@ -1,7 +1,7 @@
 import { IProfile } from './profile.interface';
 
 export class IUser {
-    readonly id: number;
+    readonly id?: number;
 
     readonly username: string;
 

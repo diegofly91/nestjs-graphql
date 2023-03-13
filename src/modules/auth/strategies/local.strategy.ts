@@ -13,9 +13,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(dto: LoginUserDto): Promise<any> {
-        const user = await this.authService.validateUser(dto);
-        if (!user) throw new UnauthorizedException('El usuario o la contraseña no coincide.');
+    async validate({ username, password }: LoginUserDto): Promise<any> {
+        const user = await this.authService.validateUser({ username, password });
+        if (!user) throw new UnauthorizedException();
         return user;
     }
 }

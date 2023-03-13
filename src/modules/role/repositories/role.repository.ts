@@ -43,6 +43,11 @@ export class RoleRepository<Role> implements RoleInterfaceRepository<Role> {
         return raw;
     }
 
+    async createRoles(roles: CreateRoleDto[]): Promise<Role[]> {
+        const { raw } = await this.roleRepository.createQueryBuilder().insert().into(Role).values(roles).execute();
+        return raw;
+    }
+
     async updateRole(roleId: number, dto: UpdateRoleDto): Promise<Role> {
         if (!roleId) throw new BadRequestException('The role ID is required');
         const role = await this.getRoleById(roleId);

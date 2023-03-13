@@ -45,5 +45,5 @@ export class CreateProfileUserDto {
         },
     })
     @IsOptional()
-    phone: string;
+    phone?: string;
 }

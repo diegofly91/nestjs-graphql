@@ -10,6 +10,10 @@ export class RoleService {
         private readonly roleRepository: RoleRepository<Role>,
     ) {}
 
+    async createRoles(roles: CreateRoleDto[]): Promise<Role[]> {
+        return await this.roleRepository.createRoles(roles);
+    }
+
     async getRoles(): Promise<Role[]> {
         return await this.roleRepository.getRoles();
     }

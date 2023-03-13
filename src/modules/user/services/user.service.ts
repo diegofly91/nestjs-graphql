@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { User } from '../entities';
 import { UserRepository } from '../repositories';
 import { CreateUserDto } from '../dtos';
@@ -22,7 +22,7 @@ export class UserService {
         return await this.userRepository.getUserByUsername(username);
     }
 
-    async getPasswordByUsename(username: string): Promise<string> {
+    async getPasswordByUsename(username: string): Promise<User> {
         return await this.userRepository.getPasswordByUsename(username);
     }
 

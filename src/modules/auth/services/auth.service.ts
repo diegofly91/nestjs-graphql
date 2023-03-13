@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { IUser } from '@/modules/user/interfaces';
-import { UserService } from '@/modules/user/services';
+import { UserService, UserCompanyService } from '@/modules/user/services';
 import { RoleService } from '@/modules/role/services';
 import { Token, LoginUserDto } from '../dtos';
+import { IUserPayload } from '../interfaces';
+import { Status } from '@/modules/shared/enums';
 
 @Injectable()
 export class AuthService {
@@ -12,36 +13,27 @@ export class AuthService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly roleService: RoleService,
+        private readonly userCompanyService: UserCompanyService,
     ) {}
 
-    async validateUser(dto: LoginUserDto): Promise<Token> {
+    async validateUser(dto: LoginUserDto): Promise<boolean> {
         const { username, password } = dto;
+        const user = await this.userService.getPasswordByUsename(username);
+        if (!user || !(await bcrypt.compare(password, user.password)))
+            throw new NotFoundException('Alguno de los datos no coincide');
+        if (user.status !== Status.ACTIVE) throw new NotFoundException('El usuario esta no esta ACTIVO');
+        return true;
+    }
+
+    async payloadData(username: string): Promise<Token> {
         const user = await this.userService.getUserByUsername(username);
-        await this.comparePassword(password, username);
-        return await this.payloadData(user);
-    }
-
-    async comparePassword(password, username) {
-        const userPassword = await this.userService.getPasswordByUsename(username);
-        const passwordHashed = await bcrypt.compare(password, userPassword);
-        if (!passwordHashed) {
-            throw new NotFoundException('La contraseña no coincide');
-        }
-    }
-
-    async payloadData(user: IUser) {
-        if (user && user.status != 'ACTIVE') {
-            throw new NotFoundException('El usuario esta no esta ACTIVO');
-        }
         const role = await this.roleService.getRoleById(user.roleId);
+        const userCompany = await this.userCompanyService.getUserCompanyByUserId(user.id);
 
         const payload = {
-            username: user.username,
-            id: user.id,
+            ...user,
             roleName: role.name,
-            roleId: user.roleId,
-            status: user.status,
-            companyId: null,
+            companyId: userCompany?.companyId,
         };
 
         return {
@@ -50,7 +42,7 @@ export class AuthService {
     }
 
     async validateToken(auth: string) {
-        const token = auth;
+        const token = auth.replace('Bearer ', '');
         try {
             const decoded = this.jwtService.verify(token);
             return decoded;

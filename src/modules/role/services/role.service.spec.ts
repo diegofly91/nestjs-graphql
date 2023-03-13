@@ -1,4 +1,3 @@
-//import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleService } from '../services';
 import { RoleType } from '../enums/index';
@@ -6,10 +5,10 @@ import { CreateRoleDto } from '../dtos';
 import { IRole } from '../interfaces';
 
 const Roles: IRole[] = [
-    { 
+    {
         id: 1,
         name: RoleType.SUPERUSER,
-        description: '' 
+        description: '',
     },
     {
         id: 2,
@@ -31,7 +30,7 @@ describe('RoleService', () => {
             });
         }),
         getRoleById: jest.fn().mockImplementation((id: number) => {
-            const role = Roles.find((item) => item.id === id)
+            const role = Roles.find((item) => item.id === id);
             return Promise.resolve(role);
         }),
         deleteRole: jest.fn(),
@@ -55,7 +54,7 @@ describe('RoleService', () => {
         it('should get all Roles', async () => {
             const result = await roleService.getRoles();
             expect(result).toEqual(Roles);
-            expect(result.length).toBe(Roles.length)
+            expect(result.length).toBe(Roles.length);
         });
     });
     describe('createRole', () => {
