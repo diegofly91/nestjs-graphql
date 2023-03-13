@@ -1,6 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { TypeOrmService } from './ormconfig';
+import { TypeOrmService } from './ormconfig.service';
 
 export const databaseProviders = [
     TypeOrmModule.forRootAsync({

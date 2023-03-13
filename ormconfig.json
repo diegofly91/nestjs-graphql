@@ -1,0 +1,21 @@
+{
+    "type": "postgres",
+    "username": "admin",
+    "password": "my-weak-password",
+    "host": "localhost",
+    "port": 5432,
+    "database": "prueba",
+    "entities": [
+        "src/**/**/**/*.entity{.ts,.js}"
+    ],
+    "migrations": [
+        "src/modules/database/migrations/mysql/*{.ts,.js}"
+    ],
+    "cli": {
+        "migrationsDir": "src/modules/database/migrations/mysql"
+    },
+    "paths": {
+        "@/modules/*": ["src/modules/*"],
+        "@/config/*": ["src/config/*"]
+    }
+}
